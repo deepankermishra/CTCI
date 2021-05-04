@@ -1,0 +1,75 @@
+1.1 Is Unique: Implement an algorithm to determine if a string has all unique characters. What if you cannot use additional data structures?
+
+def allUnique(data):
+	options = [0 * 26]
+	for ch in data:
+		idx = ord('a')-ord(ch)
+		if(options[idx]):
+		 	return False
+		options[idx] += 1
+	return True
+
+> O(C) C = size of char set (26 above)
+
+1.2 Check Permutation: Given two strings, write a method to decide if one is a permutation of the other.
+
+#abc -> 256 [0,0...,0,1,1,1,0,0,0,0,0,...]
+#def -> 256 [0,0...,0,0,0,0,1,1,1,0,0,...]
+#bca -> 256 [0,0...,0,1,1,1,0,0,0,0,0,...]
+
+def arePermutations(sa, sb):
+	if(len(sa) != len(sb)):
+		return False
+	freq = [0 * 256]
+	for ch in sa:
+		freq[ord(ch)] += 1
+	for ch in sb:
+		freq[ord(sb)] -= 1
+		if freq[ord(sb)] < 0:
+			return False
+	return True
+
+
+> did not dry run
+time O(len(sa)+len(sb))
+space O(1) (256 * 32 bytes) extended ASCII
+
+
+
+1.3 URLify: Write a method to replace all spaces in a string with '%20: You may assume that the string has sufficient space at the end to hold the additional characters, and that you are given the "true" length of the string. (Note: If implementing in Java, please use a character array so that you can perform this operation in place.)
+EXAMPLE
+Input:  "Mr John Smith    " , 13 
+Output: "Mr%20John%20Smith"
+
+
+# len(input) + 2*numOfSpaces - 1 is the last point where we place the element
+# i n-1 to 0 if input[i] == ' ' output[j] = 0; output[j-1] = 2 ; output[j-2] = %; j -= 3
+
+
+def URLify(url, size):
+	spaceCount = 0
+	for ch in url:
+		if ch == ' ':
+			spaceCount += 1
+
+	farIdx = size + spaceCount * 2 - 1
+	
+	for nearIdx in range(size-1, -1, -1):
+		if(url[nearIdx] == ' '):
+			url[farIdx] = '0'
+			url[farIdx-1] = '2'
+			url[farIdx-2] = '%'
+			farIdx -= 3
+		else:
+			url[farIdx] = url[nearIdx]
+			farIdx -= 1
+
+	return url
+
+O(1) space
+O(len(url)) time
+
+
+
+
+
